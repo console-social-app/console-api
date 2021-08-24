@@ -73,9 +73,13 @@ app.use(postRoutes)
 app.use(errorHandler)
 
 // run API on designated port (4741 in this case)
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log('listening on port ' + port)
 })
+
+const io = require('socket.io')(server, { cors: { origin: '*' } })
+const socket = require('./app/socket/socket')
+io.on('connection', socket)
 
 // needed for testing
 module.exports = app
