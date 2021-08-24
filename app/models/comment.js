@@ -5,8 +5,8 @@ const mongoose = require('mongoose')
 
 // create model
 const commentSchema = new mongoose.Schema({
-// comment text
-  text: String,
+// comment content
+  content: String,
   // reference to the user or owner
   owner: {
     type: mongoose.Schema.Types.ObjectId,
