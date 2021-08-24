@@ -1,13 +1,13 @@
 // require necessary NPM packages
-const express = require('express')
-const mongoose = require('mongoose')
-const cors = require('cors')
+const express = require('express') // Bring in Express
+const mongoose = require('mongoose') // require mongoose package
+const cors = require('cors') // require cors package
 
 // require route files
 const exampleRoutes = require('./app/routes/example_routes')
 const userRoutes = require('./app/routes/user_routes')
-// require the good ole stuff from user postRoutes
-const postRoutes = require('./app/routes/post_routes')
+// gracelli specific routes
+const productRoutes = require('./app/routes/product_routes')
 
 // require middleware
 const errorHandler = require('./lib/error_handler')
@@ -22,8 +22,8 @@ const auth = require('./lib/auth')
 
 // define server and client ports
 // used for cors and local port declaration
-const serverDevPort = 4741
-const clientDevPort = 7165
+const serverDevPort = 4741 // MAGIC PORT NUMBER FOR SERVER
+const clientDevPort = 7165 // MAGIC PORT Number FOR CLIENT
 
 // establish database connection
 // use new version of URL parser
@@ -59,13 +59,13 @@ app.use(requestLogger)
 
 // IMPORTANT
 // Access the routes
-app.get('/', (req, res) => res.send('social app backend is happy, grateful for your visit and open for business as well'))
+app.get('/', (req, res) => res.send('gracelli home. shopping and eCommerce with a twist'))
 
 // register route files
 app.use(exampleRoutes)
 app.use(userRoutes)
-// add posts specific routes
-app.use(postRoutes)
+// add gracelli specific route
+app.use(productRoutes)
 
 // register error handling middleware
 // note that this comes after the route middlewares, because it needs to be
