@@ -1,6 +1,7 @@
 // post mongoose model
 
 const mongoose = require('mongoose')
+const commentSchema = require('./comment')
 
 const postSchema = new mongoose.Schema({
   title: String,
@@ -9,7 +10,8 @@ const postSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
-  }
+  },
+  comments: [commentSchema]
 },
 {
   timestamps: true
