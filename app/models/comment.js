@@ -6,7 +6,10 @@ const mongoose = require('mongoose')
 // create model
 const commentSchema = new mongoose.Schema({
 // comment content
-  content: String,
+  content: {
+    type: String,
+    required: true
+  },
   // reference to the user or owner
   owner: {
     type: mongoose.Schema.Types.ObjectId,
