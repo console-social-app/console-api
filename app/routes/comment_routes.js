@@ -33,16 +33,11 @@ const router = express.Router()
 router.post('/posts/:postId/comments/', requireToken, (req, res, next) => {
   // set owner of new comment to be current user
   req.body.comment.owner = req.user.id
-  let newComment
-  Comment.create(req.body.comment)
-    // respond to successful `create` with status 201 and JSON of new "comment"
-    .then(comment => {
-      newComment = comment
-      res.status(201).json({ comment: comment.toObject() })
-       return Post.findById(req.params.postId)
-    })
+  Post.findById(req.params.postId)
     .then(post => {
-      post.comments.push(newComment)
+      post.comments.push(req.body.comment)
+      res.sendStatus(200)
+      return post.save()
     })
     // if an error occurs, pass it off to our error handler
     // the error handler needs the error message and the `res` object so that it
