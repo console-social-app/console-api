@@ -2,6 +2,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const cors = require('cors')
+const socketIo = require('socket.io')
 
 // require route files
 const exampleRoutes = require('./app/routes/example_routes')
@@ -19,6 +20,7 @@ const db = require('./config/db')
 
 // require configured passport authentication middleware
 const auth = require('./lib/auth')
+const { Server } = require('mongodb')
 
 // define server and client ports
 // used for cors and local port declaration
@@ -73,9 +75,16 @@ app.use(postRoutes)
 app.use(errorHandler)
 
 // run API on designated port (4741 in this case)
-app.listen(port, () => {
-  console.log('listening on port ' + port)
+const server = app.listen(port, () => {
+	console.log('listening on port ' + port)
 })
+const io = socketIo(server)
+io.on('connection', (socket) => {
+  console.log('a user connected')
+  io.emit('social', 'Hello')
+})
+
+
 
 // needed for testing
 module.exports = app
