@@ -31,16 +31,19 @@ const router = express.Router()
 // GET /posts
 router.get('/posts', requireToken, (req, res, next) => {
   Post.find()
-    .then(posts => {
-      // `posts` will be an array of Mongoose documents
-      // we want to convert each one to a POJO, so we use `.map` to
-      // apply `.toObject` to each one
-      return posts.map(post => post.toObject())
-    })
-    // respond with status 200 and JSON of the posts
-    .then(posts => res.status(200).json({ posts: posts }))
-    // if an error occurs, pass it to the handler
-    .catch(next)
+    .populate('owner')
+		.then((posts) => {
+			// `posts` will be an array of Mongoose documents
+			// we want to convert each one to a POJO, so we use `.map` to
+			// apply `.toObject` to each one
+			return posts.map((post) => {
+				return post.toObject()
+			})
+		})
+		// respond with status 200 and JSON of the posts
+		.then((posts) => res.status(200).json({ posts: posts }))
+		// if an error occurs, pass it to the handler
+		.catch(next)
 })
 
 // SHOW
@@ -48,6 +51,7 @@ router.get('/posts', requireToken, (req, res, next) => {
 router.get('/posts/:id', requireToken, (req, res, next) => {
   // req.params.id will be set based on the `:id` in the route
   Post.findById(req.params.id)
+    .populate('owner')
     .then(handle404)
     // if `findById` is successful, respond with 200 and "post" JSON
     .then(post => res.status(200).json({ post: post.toObject() }))
