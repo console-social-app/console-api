@@ -36,9 +36,9 @@ router.post('/posts/:postId/comments/', requireToken, (req, res, next) => {
   Post.findById(req.params.postId)
     .then(post => {
       post.comments.push(req.body.comment)
-      res.sendStatus(200)
       return post.save()
     })
+    .then(() => res.json({ comment: req.body.comment }))
     // if an error occurs, pass it off to our error handler
     // the error handler needs the error message and the `res` object so that it
     // can send an error message back to the client
