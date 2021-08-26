@@ -35,7 +35,7 @@ router.post('/posts/:postId/comments/', requireToken, (req, res, next) => {
   req.body.comment.owner = req.user.id
   Post.findById(req.params.postId)
     .then(post => {
-      post.comments.push(req.body.comment)
+      post.comments.unshift(req.body.comment)
       return post.save()
     })
     .then(() => res.json({ comment: req.body.comment }))
@@ -47,25 +47,21 @@ router.post('/posts/:postId/comments/', requireToken, (req, res, next) => {
 
 // UPDATE
 // PATCH /comments/...
-router.patch('/posts/:postId/comments/:id', requireToken, removeBlanks, (req, res, next) => {
+router.patch('/posts/:postId/comments', requireToken, removeBlanks, (req, res, next) => {
   // if the client attempts to change the `owner` property by including a new
   // owner, prevent that by deleting that key/value pair
-  delete req.body.comment.owner
-
-  Comment.findById(req.params.id)
-    .then(handle404)
-    .then(comment => {
-      // pass the `req` object and the Mongoose record to `requireOwnership`
-      // it will throw an error if the current user isn't the owner
-      requireOwnership(req, comment)
-
-      // pass the result of Mongoose's `.update` to the next `.then`
-      return comment.updateOne(req.body.comment)
-    })
-    // if that succeeded, return 204 and no JSON
-    .then(() => res.sendStatus(204))
-    // if an error occurs, pass it to the handler
-    .catch(next)
+    req.body.comment.owner = req.user.id
+    Post.findById(req.params.postId)
+      .then((post) => {
+        const index = post.comments.findIndex((comment) => comment._id === req.body.comment._id)
+        post.comments.splice(index, 1, req.body.comment)
+        return post.save()
+      })
+      .then(() => res.json({ comment: req.body.comment }))
+      // if an error occurs, pass it off to our error handler
+      // the error handler needs the error message and the `res` object so that it
+      // can send an error message back to the client
+      .catch(next)
 })
 
 // DESTROY
