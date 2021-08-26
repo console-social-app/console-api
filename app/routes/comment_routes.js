@@ -64,21 +64,21 @@ router.patch('/posts/:postId/comments', requireToken, removeBlanks, (req, res, n
       .catch(next)
 })
 
+
 // DESTROY
 // DELETE /comments/...
-router.delete('/posts/:postId/comments/:id', requireToken, (req, res, next) => {
-  Comment.findById(req.params.id)
-    .then(handle404)
-    .then(comment => {
-      // throw an error if current user doesn't own `comment`
-      requireOwnership(req, comment)
-      // delete the comment ONLY IF the above didn't throw
-      comment.deleteOne()
-    })
-    // send back 204 and no content if the deletion succeeded
-    .then(() => res.sendStatus(204))
-    // if an error occurs, pass it to the handler
-    .catch(next)
+router.delete('/posts/:postId/comments', requireToken, removeBlanks, (req, res, next) => {
+    Post.findById(req.params.postId)
+      .then((post) => {
+        const index = post.comments.findIndex((comment) => comment._id === req.body.commentId)
+        post.comments.splice(index, 1)
+        return post.save()
+      })
+      .then(() => res.json({ comment: req.body.comment }))
+      // if an error occurs, pass it off to our error handler
+      // the error handler needs the error message and the `res` object so that it
+      // can send an error message back to the client
+      .catch(next)
 })
 
 module.exports = router
