@@ -30,7 +30,6 @@ const router = express.Router()
 // INDEX
 // GET /posts
 router.get('/posts', requireToken, (req, res, next) => {
-  console.log(req.query)
   Post.find()
     .populate('owner')
     .then(posts => {
