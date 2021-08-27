@@ -46,10 +46,6 @@ router.get('/posts', requireToken, (req, res, next) => {
 				return post.toObject()
 			})
 		})
-    // .then((posts) => {
-    //   console.log(posts)
-    //   return posts
-    // })
 		// respond with status 200 and JSON of the posts
 		.then((posts) => res.status(200).json({ posts: posts }))
 		// if an error occurs, pass it to the handler

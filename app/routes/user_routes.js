@@ -32,7 +32,6 @@ router.get('/users', (req, res, next) => {
       return users.filter(user => user.username.includes(query))
   })
   .then(results => {
-    console.log(results)
     res.status(200).json({ results });
   })
   .catch(next)
