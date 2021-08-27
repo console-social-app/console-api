@@ -34,13 +34,9 @@ router.get('/posts', requireToken, (req, res, next) => {
     .populate('owner')
     .then(posts => {
       const user = req.query.user
-      if (user) {
-        console.log(user)
-        return posts.filter(post => {
-          post.owner._id.toString() === user})
-      } else {
-        return posts
-      }
+      return user
+        ? posts.filter(post => post.owner._id.toString() === user)
+        : posts
     })
 		.then((posts) => {
 			// `posts` will be an array of Mongoose documents
