@@ -24,7 +24,7 @@ router.post('/posts/:postId/comments/', requireToken, (req, res, next) => {
   req.body.comment.owner = req.user.id
   Post.findById(req.params.postId)
     .then((post) => {
-      post.comments.unshift(req.body.comment)
+      post.comments.push(req.body.comment)
       return post.save()
     })
     .then(() => res.json({ comment: req.body.comment }))
