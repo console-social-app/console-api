@@ -32,6 +32,12 @@ const router = express.Router()
 router.get('/posts', requireToken, (req, res, next) => {
   Post.find()
     .populate('owner')
+    .then(posts => {
+      const user = req.query.user
+      return user
+        ? posts.filter(post => post.owner._id.toString() === user)
+        : posts
+    })
 		.then((posts) => {
 			// `posts` will be an array of Mongoose documents
 			// we want to convert each one to a POJO, so we use `.map` to
@@ -40,6 +46,10 @@ router.get('/posts', requireToken, (req, res, next) => {
 				return post.toObject()
 			})
 		})
+    // .then((posts) => {
+    //   console.log(posts)
+    //   return posts
+    // })
 		// respond with status 200 and JSON of the posts
 		.then((posts) => res.status(200).json({ posts: posts }))
 		// if an error occurs, pass it to the handler
