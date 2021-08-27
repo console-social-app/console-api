@@ -36,7 +36,8 @@ router.get('/posts', requireToken, (req, res, next) => {
       const user = req.query.user
       if (user) {
         console.log(user)
-        return posts.filter(post => post.owner._id === user)
+        return posts.filter(post => {
+          post.owner._id.toString() === user})
       } else {
         return posts
       }
