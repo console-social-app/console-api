@@ -29,8 +29,7 @@ As a user...
 ![Wireframe](https://imgur.com/TIZIxtF.png)
 
 ## Entity Relationship Diagram
-![Entity Relationship Diagram part 1](https://i.imgur.com/QsUxTdi.png)
-![Entity Relationship Diagram part 2](https://i.imgur.com/OYVSC8C.png)
+![Entity Relationship Diagram](https://i.imgur.com/QsUxTdi.png)
 
 
 ## Catalog of Routes
